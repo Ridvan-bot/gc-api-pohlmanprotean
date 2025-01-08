@@ -7,6 +7,5 @@ services:
       - "${PORT:-3000}:3000"  # Map the container's port to the host port using an environment variable
     environment:
       - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=postgresql://postgreuser:bEbovaCb90@postgres:5432/postgredb  # Database connection string
       - PORT=${PORT:-3000}  # Set the PORT environment variable in the container
 
