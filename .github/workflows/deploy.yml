@@ -51,7 +51,7 @@ jobs:
              LATEST_TAG=$NEW_TAG
            fi
            echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-           echo "Latest tag is $LATEST_TAG"
+           echo "Latest tag is $LATEST_TAG
 
        - name: Set up Docker Buildx
          uses: docker/setup-buildx-action@v3.7.1
