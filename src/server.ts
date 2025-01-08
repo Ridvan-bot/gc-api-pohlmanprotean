@@ -4,21 +4,15 @@ import dotenv from 'dotenv';
 import routes from './routes/index';
 import { errorHandler } from './lib/errorHandling/errorHandler';
 
+const PORT = process.env.PORT || 8080;
 
 // Load environment variables
 dotenv.config();
 
-if (
-    !process.env.DATABASE_URL ||
-    !process.env.PORT
-)
-    throw new Error('Required environment variables is missing');
-
-// Import logger middleware
 import logger from './lib/middleware/logger';
 
 const app = express();  
-const PORT = process.env.PORT;
+
 
 // Use the logger middleware for all routes
 app.use(logger);
