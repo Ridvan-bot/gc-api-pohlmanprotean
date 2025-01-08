@@ -2,18 +2,11 @@ version: '3.8'  # You can omit this line if you don't want versioning
 
 services:
   api:
-    build: .  # Assuming you have a Dockerfile in the current directory for the API service
+    build:
     ports:
       - "${PORT:-3000}:3000"  # Map the container's port to the host port using an environment variable
     environment:
       - JWT_SECRET=${JWT_SECRET}
       - DATABASE_URL=postgresql://postgreuser:bEbovaCb90@postgres:5432/postgredb  # Database connection string
       - PORT=${PORT:-3000}  # Set the PORT environment variable in the container
-    networks:
-      - api-network  # Connect to the same network
 
-networks:
-  api-network:  # Define a network for communication between containers
-
-volumes:
-  postgres_data:  # Volume for persisting PostgreSQL data
