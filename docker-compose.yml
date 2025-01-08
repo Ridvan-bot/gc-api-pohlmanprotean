@@ -1,11 +1,10 @@
-version: '3.8'  # You can omit this line if you don't want versioning
+version: '3.8'
 
 services:
   api:
     build:
     ports:
-      - "${PORT:-3000}:3000"  # Map the container's port to the host port using an environment variable
+      - "8080:8080"
     environment:
       - JWT_SECRET=${JWT_SECRET}
-      - PORT=${PORT:-3000}  # Set the PORT environment variable in the container
-
+      - PORT=8080
