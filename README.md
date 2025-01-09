@@ -52,6 +52,5 @@ An API in Google Cloud Run using Cloud FireStore.
 3. Build the project using `npm run build`.
 4. Start the application using `npm run start`.
 
-## License
-
-This project is licensed under the ISC License.
+##
+Crafted with care by **Robin Pohlman** at **Pohlman Protean AB**.
