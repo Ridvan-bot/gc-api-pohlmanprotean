@@ -77,7 +77,7 @@ jobs:
           gcloud run deploy ${{ env.BRANCH_NAME }}-gc-api-pohlmanprotean \
           --image eu.gcr.io/${{ env.BRANCH_NAME }}-gc-api-pohlmanprotean/${{ env.BRANCH_NAME }}-gc-api-pohlmanprotean-image:${{ env.LATEST_TAG }} \
           --platform managed \
-          --region europe-west1 \
+          --region europe-north1 \
           --allow-unauthenticated \
           --timeout=300s \
           --memory 1Gi \
