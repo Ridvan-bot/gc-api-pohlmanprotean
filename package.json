@@ -4,11 +4,11 @@
   "description": "An API in Google Cloud Run using Cloud FireStore",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc && node dist/server.js",
-    "test": "jest --runInBand",
-    "dev": "tsc && nodemon dist/server.js"
-  },
+  "build": "tsc",
+  "start": "tsc && node --max-old-space-size=1024 dist/server.js",
+  "test": "jest --runInBand",
+  "dev": "tsc && nodemon dist/server.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
