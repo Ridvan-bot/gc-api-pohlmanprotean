@@ -59,7 +59,6 @@
 4. Start the application using `npm run start`.
 
 ##
-Crafted with care by **Robin Pohlman** at **Pohlman Protean AB**.
 <p align="center">
-  In the middle?.
+Crafted with care by **Robin Pohlman** at **Pohlman Protean AB**.
 </p>
