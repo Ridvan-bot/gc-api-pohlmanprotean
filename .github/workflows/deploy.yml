@@ -81,5 +81,4 @@ jobs:
           --allow-unauthenticated \
           --timeout=300s \
           --memory 1Gi \
-          --update-env-vars API_Key-,JWT_SECRET- \
           --tag ${{ env.REVISION_TAG }}
