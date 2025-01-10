@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login } from '../controllers/userControllers/postAuthController';
+import { login } from '../lib/middleware/authentication';
 
 const router = Router();
 

@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const client = new SecretManagerServiceClient();
 
-const getSecrets = async (secretName: string, next: NextFunction) => {
+export const getSecrets = async (secretName: string, next: NextFunction) => {
   try {
     const [version] = await client.accessSecretVersion({
       name: `projects/dev-gc-api-pohlmanprotean/secrets/${secretName}/versions/latest`,
