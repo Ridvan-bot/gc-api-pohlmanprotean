@@ -1,6 +1,6 @@
 # API Pohlman Protean hosted in Google Cloud 
 
-![Build Status](https://github.com/Ridvan-bot/pohlmanprotean.se/actions/workflows/deploy.yml/badge.svg)
+![Build Status](https://github.com/Ridvan-bot/gc-api-pohlmanprotean/actions/workflows/deploy.yml/badge.svg)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Ridvan-bot/gc-api-pohlmanprotean?label=version&sort=semver)
 ![Last Commit](https://img.shields.io/github/last-commit/Ridvan-bot/gc-api-pohlmanprotean)
 ![GitHub issues](https://img.shields.io/github/issues/Ridvan-bot/gc-api-pohlmanprotean)
