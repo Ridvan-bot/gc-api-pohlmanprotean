@@ -60,5 +60,5 @@
 
 ##
 <p align="center">
-Crafted with care by **Robin Pohlman** at **Pohlman Protean AB**.
+  Crafted with care by <strong>Robin Pohlman</strong> at <strong>Pohlman Protean AB</strong>.
 </p>
