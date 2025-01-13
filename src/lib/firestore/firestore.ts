@@ -1,25 +1,38 @@
 import admin from 'firebase-admin';
-import { Request, Response, NextFunction } from 'express';
-import { Firestore } from "@google-cloud/firestore";
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
-import { getSecrets } from 'lib/middleware/authentication';
+import { getSecretsNoNext } from '../middleware/authentication';
+import { firestore } from 'firebase-admin';
+
+// Initialize Firestore
+const db = new Firestore({
+  projectId: 'dev-gc-api-pohlmanprotean',
+});
+
 const client = new SecretManagerServiceClient();
+let firestore: admin.firestore.Firestore;
 
+export const dblogin = async (): Promise<void> => {
+  try {
+    const serviceAccount = await getSecretsNoNext('dev-api-pohlmanprotean-service-account');
 
-export const dblogin = async (next: NextFunction) => {
-    try {
-        const serviceAccount = await getSecrets('dev-api-pohlmanprotean-service-account', next);
-
-if (serviceAccount) {
-    admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(serviceAccount))
-    });
+    if (serviceAccount) {
+      admin.initializeApp({
+        credential: admin.credential.cert(JSON.parse(serviceAccount)),
+        databaseURL: 'https://firestore.googleapis.com/v1/projects/dev-gc-api-pohlmanprotean/databases/dev-api-pohlmanprotean-db/documents'
+      });
+      firestore = admin.firestore(); // Assign the Firestore instance
+    } else {
+      throw new Error('Service account not found');
+    }
+  } catch (error) {
+    console.error('Failed to initialize Firestore:', error);
+    throw error;
   }
-} catch (error) {
-  console.error('Failed to initialize Firestore:', error);
-  next(error);
-}
 };
 
-
-export const db = admin.firestore();
+export const getFirestore = (): admin.firestore.Firestore => {
+  if (!firestore) {
+    throw new Error('Firestore is not initialized. Call dblogin() first.');
+  }
+  return firestore;
+};

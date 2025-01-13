@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import routes from './routes/index';
 import { errorHandler } from './lib/errorHandling/errorHandler';
-import { dblogin } from './lib/firestore/firestore';
+import { dblogin, getFirestore } from './lib/firestore/firestore';
 
 // Load environment variables
 dotenv.config();
@@ -28,13 +28,18 @@ app.use((req, res, next) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Start the server
-app.listen(PORT, () => {
-  try {
-    dblogin(() => {
-      console.log('Server is running on http://localhost:${PORT}/api/v1/welcome');
+// Initialize Firestore before starting the server
+dblogin()
+  .then(() => {
+    // Access Firestore instance after initialization
+    const db = getFirestore();
+
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}/api/v1/welcome`);
     });
-  } catch (error) {
+  })
+  .catch((error) => {
     console.error('Failed to initialize Firestore:', error);
-  }
-});
+    process.exit(1); // Exit the process if Firestore initialization fails
+  });

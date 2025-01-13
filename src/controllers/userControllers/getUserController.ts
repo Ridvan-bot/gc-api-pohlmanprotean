@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-
-
+import { getFirestore } from '../../lib/firestore/firestore';
 // Controller to get user profile
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -13,7 +12,6 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
 
 export const getUserByUsername = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('getUserByUsername');
     res.status(200).json({message: 'Future function'});
   } catch (error) {
     next(error);
@@ -23,8 +21,17 @@ export const getUserByUsername = async (req: Request, res: Response, next: NextF
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log('getUsers');
-    res.status(200).json({message: 'Future function'});
+    const db = getFirestore();
+    const usersSnapshot = await db.collection('users').get();
+    const users = usersSnapshot.docs.map(doc => doc.data());
+
+    if (users.length > 0) {
+      console.log('Users:', users);
+      return res.status(200).json(users);
+    } else {
+      return res.status(404).json({ message: 'No users found' });
+    }
   } catch (error) {
-next(error);
+    next(error);
   }
 };
