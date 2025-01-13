@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import routes from './routes/index';
 import { errorHandler } from './lib/errorHandling/errorHandler';
+import { dblogin } from './lib/firestore/firestore';
 
 // Load environment variables
 dotenv.config();
@@ -29,5 +30,11 @@ app.use(errorHandler);
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}/api/v1/welcome`);
+  try {
+    dblogin(() => {
+      console.log('Server is running on http://localhost:${PORT}/api/v1/welcome');
+    });
+  } catch (error) {
+    console.error('Failed to initialize Firestore:', error);
+  }
 });
