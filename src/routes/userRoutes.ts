@@ -17,7 +17,8 @@ import validateRequest from '../lib/middleware/validate';
 const router = Router();
 
 // Apply the rate limiter and validation before the register handler
-router.post('/register', registerLimiter, userValidationRules, validateRequest, register);
+// router.post('/register', registerLimiter, userValidationRules, validateRequest, register);
+router.post('/register', registerLimiter, validateRequest, register);
 router.put('/:username', updateUserValidationRules, authenticateToken, validateRequest, updateUser);
 router.get('/:username', authenticateToken, getUserByUsername);
 router.delete('/:username', authenticateToken, deleteUser); 

@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
+import { GoogleAuth } from 'google-auth-library';
+import { Firestore } from '@google-cloud/firestore';
+
+let db: Firestore | undefined;
 
 // Load environment variables
 const client = new SecretManagerServiceClient();
@@ -81,6 +85,52 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     next(error);
   }
 };
+
+export const gCloudAuth = async (secretName: string) => {
+  try {
+    console.log('Fetching service account secret...');
+    const secret = await getSecretsNoNext(secretName);
+    if (!secret) {
+      throw new Error('Failed to retrieve service account secret');
+    }
+    const credentials = JSON.parse(secret);
+    const auth = new GoogleAuth({
+      credentials: {
+        client_email: credentials.client_email,
+        private_key: credentials.private_key,
+      },
+      scopes: ['https://www.googleapis.com/auth/cloud-platform']
+    });
+    return auth as GoogleAuth;
+  } catch (error) {
+    console.error('Error logging in: ', error);
+  }
+}
+
+export const firestoreConnect = async ( projectId: string, databaseId: string, auth: GoogleAuth) => {
+  try {
+    const credentials = await auth.getCredentials();
+    const db = new Firestore({
+      projectId: projectId,
+      databaseId: databaseId,
+      credentials: {
+        client_email: credentials.client_email,
+        private_key: credentials.private_key,
+      }
+    });
+    console.log('Connecting to Firestore...');
+    return db as Firestore;
+  } catch (error) {
+    console.error('Error adding or retrieving document: ', error);
+  }
+};
+
+export const getFirestore = async () => {
+  if (!db) {
+    throw new Error('Firestore not initialized');
+  }
+  return db;
+}
 
 
 export default authenticateToken;

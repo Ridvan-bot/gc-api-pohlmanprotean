@@ -1,38 +1,86 @@
-import admin from 'firebase-admin';
-import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
-import { getSecretsNoNext } from '../middleware/authentication';
-import { firestore } from 'firebase-admin';
 
-// Initialize Firestore
-const db = new Firestore({
-  projectId: 'dev-gc-api-pohlmanprotean',
-});
+// import { gCloudAuth, firestoreConnect } from '../middleware/authentication';
+// import { GoogleAuth } from 'google-auth-library';
+// import { Firestore } from '@google-cloud/firestore';
 
-const client = new SecretManagerServiceClient();
-let firestore: admin.firestore.Firestore;
+import { Firestore } from '@google-cloud/firestore';
+import { gCloudAuth } from '../middleware/authentication';
 
-export const dblogin = async (): Promise<void> => {
-  try {
-    const serviceAccount = await getSecretsNoNext('dev-api-pohlmanprotean-service-account');
+export let db: Firestore | null = null;
 
-    if (serviceAccount) {
-      admin.initializeApp({
-        credential: admin.credential.cert(JSON.parse(serviceAccount)),
-        databaseURL: 'https://firestore.googleapis.com/v1/projects/dev-gc-api-pohlmanprotean/databases/dev-api-pohlmanprotean-db/documents'
-      });
-      firestore = admin.firestore(); // Assign the Firestore instance
-    } else {
-      throw new Error('Service account not found');
+export const initializeFirestore = async () => {
+  if (!db) {
+    const auth = await gCloudAuth('dev-api-pohlmanprotean-service-account');
+    if (!auth) {
+      throw new Error('Failed to authenticate with Google Cloud');
     }
-  } catch (error) {
-    console.error('Failed to initialize Firestore:', error);
-    throw error;
+    db = new Firestore({
+      projectId: 'dev-gc-api-pohlmanprotean',
+      databaseId: 'dev-api-pohlmanprotean-db',
+      credentials: await auth.getCredentials(),
+    });
+    console.log('Firestore initialized');
   }
+  return db;
 };
 
-export const getFirestore = (): admin.firestore.Firestore => {
-  if (!firestore) {
-    throw new Error('Firestore is not initialized. Call dblogin() first.');
+export const getFirestore = () => {
+  if (!db) {
+    throw new Error('Firestore has not been initialized. Call initializeFirestore first.');
   }
-  return firestore;
+  return db;
 };
+
+// const createAndGet = async () => {
+//   try {
+//     const auth = await gCloudAuth('dev-api-pohlmanprotean-service-account');
+//     if (!auth) {
+//       throw new Error('Failed to authenticate with Google Cloud');
+//     }
+//     const db = await firestoreConnect('dev-gc-api-pohlmanprotean', 'dev-api-pohlmanprotean-db', auth);
+//     if (db) {
+//     const docRef = db.collection('users').doc('alovelace');
+//     console.log('Setting document data...');
+//     await docRef.set({
+//       first: 'Ada',
+//       last: 'Lovelace',
+//       born: 1811
+//   });
+//   console.log('Document successfully written!');
+
+//   const doc = await docRef.get();
+//   if (doc.exists) {
+//     console.log('User document data:', doc.data());
+//   } else {
+//     console.log('No such document!');
+//   }
+// }
+//   }
+// catch (error) {
+//   console.error('Error adding or retrieving document: ', error);
+// }
+
+// }
+
+// createAndGet();
+
+
+// const runIfDb = async (auth: GoogleAuth , db: Firestore ) => {
+//   try {
+//     if (auth && db) {
+//       const docRef = db.collection('users').doc('alovelace');
+//       console.log('Setting document data...');
+//       await docRef.set({
+//         first: 'Ada',
+//         last: 'Lovelace',
+//         born: 1811
+
+//     })}
+//     else {
+//       throw new Error('Failed to authenticate with Google Cloud or connect to Firestore');
+//     };
+//   }
+//   catch (error) {
+//     console.error('Error adding or retrieving document: ', error);
+//   }
+// }
